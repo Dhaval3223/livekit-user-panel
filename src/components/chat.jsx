@@ -1,70 +1,74 @@
-'use client';
+import { Icon } from '@iconify/react';
+// import SendIcon from '@iconify/icons-mdi/send';
+import React, { useMemo, useState } from 'react';
 
-import { useMemo, useState } from 'react';
-import { PersonIcon, PaperPlaneIcon } from '@radix-ui/react-icons';
-import { Box, Flex, Text, Avatar, TextField, IconButton } from '@radix-ui/themes';
-import { useChat, useRoomInfo, useLocalParticipant } from '@livekit/components-react';
+// import PersonIcon from '@mui/icons-material/Person';
+import { Box, Grid, Avatar, TextField, Typography, IconButton } from '@mui/material';
 
-function ChatMessage({ message }) {
-  const { localParticipant } = useLocalParticipant();
-
+function ChatMessage({ message, localParticipant }) {
   return (
-    <Flex gap="2" align="start" className="break-words w-[220px]">
-      <Avatar size="1" fallback={message.from?.identity[0] ?? <PersonIcon />} radius="full" />
-      <Flex direction="column">
-        <Text
-          weight="bold"
-          size="1"
-          className={
-            localParticipant.identity === message.from?.identity ? 'text-accent-11' : 'text-gray-11'
-          }
+    <Grid
+      container
+      spacing={2}
+      alignItems="flex-start"
+      style={{ wordBreak: 'break-word', width: '220px' }}
+    >
+      <Grid item>
+        <Avatar>{message.from?.identity?.[0] || <Icon icon="ion:person" />}</Avatar>
+      </Grid>
+      <Grid item xs>
+        <Typography
+          variant="subtitle2"
+          color={localParticipant.identity === message.from?.identity ? 'primary' : 'textSecondary'}
         >
-          {message.from?.identity ?? 'Unknown'}
-        </Text>
-        <Text size="1">{message.message}</Text>
-      </Flex>
-    </Flex>
+          {message.from?.identity || 'Unknown'}
+        </Typography>
+        <Typography variant="body2">{message.message}</Typography>
+      </Grid>
+    </Grid>
   );
 }
 
-export function Chat() {
+export function Chat({ chatMessages, send, localParticipant, metadata }) {
   const [draft, setDraft] = useState('');
-  const { chatMessages, send } = useChat();
-  const { metadata } = useRoomInfo();
 
   const { enable_chat: chatEnabled } = metadata ? JSON.parse(metadata) : {};
 
-  // HACK: why do we get duplicate messages?
   const messages = useMemo(() => {
     const timestamps = chatMessages.map((msg) => msg.timestamp);
-    const filtered = chatMessages.filter((msg, i) => !timestamps.includes(msg.timestamp, i + 1));
-
-    return filtered;
+    return chatMessages.filter((msg, i) => !timestamps.includes(msg.timestamp, i + 1));
   }, [chatMessages]);
 
   const onSend = async () => {
-    if (draft.trim().length && send) {
+    if (draft.trim() && send) {
       setDraft('');
       await send(draft);
     }
   };
 
   return (
-    <Flex direction="column" className="h-full">
-      <Box className="text-center p-2 border-b border-accent-5">
-        <Text size="2" className="font-mono text-accent-11">
+    <Grid container direction="column" style={{ height: '100%' }}>
+      <Box textAlign="center" py={2} borderBottom={1} borderColor="divider">
+        <Typography variant="h6" color="primary">
           Live Chat
-        </Text>
+        </Typography>
       </Box>
-      <Flex direction="column" justify="end" className="flex-1 h-full px-2 overflow-y-auto" gap="2">
+      <Grid
+        container
+        direction="column"
+        justifyContent="flex-end"
+        style={{ flex: 1, overflowY: 'auto', padding: '0 16px' }}
+        spacing={2}
+      >
         {messages.map((msg) => (
-          <ChatMessage message={msg} key={msg.timestamp} />
+          <ChatMessage key={msg.timestamp} message={msg} localParticipant={localParticipant} />
         ))}
-      </Flex>
-      <Box>
-        <Flex gap="2" py="2" px="4" mt="4" className="border-t border-accent-5">
-          <Box className="flex-1">
-            <TextField.Input
+      </Grid>
+      <Box py={2} px={4} mt={2} borderTop={1} borderColor="divider">
+        <Grid container spacing={2} alignItems="center">
+          <Grid item xs>
+            <TextField
+              fullWidth
               disabled={!chatEnabled}
               placeholder={chatEnabled ? 'Say something...' : 'Chat is disabled'}
               value={draft}
@@ -76,12 +80,14 @@ export function Chat() {
                 }
               }}
             />
-          </Box>
-          <IconButton onClick={onSend} disabled={!draft.trim().length}>
-            <PaperPlaneIcon />
-          </IconButton>
-        </Flex>
+          </Grid>
+          <Grid item>
+            <IconButton onClick={onSend} disabled={!draft.trim()} color="primary">
+              <Icon icon="ion:send-sharp" />
+            </IconButton>
+          </Grid>
+        </Grid>
       </Box>
-    </Flex>
+    </Grid>
   );
 }
