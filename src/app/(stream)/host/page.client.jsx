@@ -6,7 +6,6 @@ import { LiveKitRoom } from '@livekit/components-react';
 import { Box, Stack } from '@mui/material';
 
 import { Chat } from 'src/components/chat';
-import { ReactionBar } from 'src/components/reaction-bar';
 import { TokenContext } from 'src/components/token-context';
 import { StreamPlayer } from 'src/components/stream-player';
 
@@ -35,7 +34,7 @@ export default function HostPage({ authToken, roomToken, serverUrl }) {
             >
               <StreamPlayer isHost />
             </Box>
-            <ReactionBar />
+            {/* <ReactionBar /> */}
           </Stack>
           <Box
             sx={{

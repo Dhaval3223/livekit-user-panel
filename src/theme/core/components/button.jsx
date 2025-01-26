@@ -53,11 +53,11 @@ const softVariant = {
         [`&.${buttonClasses.disabled}`]: {
           backgroundColor: theme.vars.palette.action.disabledBackground,
         },
-        [`& .${loadingButtonClasses.loadingIndicatorStart}`]: { left: 14 },
-        [`& .${loadingButtonClasses.loadingIndicatorEnd}`]: { right: 14 },
-        [`&.${buttonClasses.sizeSmall}`]: {
-          [`& .${loadingButtonClasses.loadingIndicatorStart}`]: { left: 10 },
-          [`& .${loadingButtonClasses.loadingIndicatorEnd}`]: { right: 10 },
+        [`& .${loadingButtonClasses?.loadingIndicatorStart}`]: { left: 14 },
+        [`& .${loadingButtonClasses?.loadingIndicatorEnd}`]: { right: 14 },
+        [`&.${buttonClasses?.sizeSmall}`]: {
+          [`& .${loadingButtonClasses?.loadingIndicatorStart}`]: { left: 10 },
+          [`& .${loadingButtonClasses?.loadingIndicatorEnd}`]: { right: 10 },
         },
       }),
     },

@@ -35,8 +35,8 @@ export function Chat({ chatMessages, send, localParticipant, metadata }) {
   const { enable_chat: chatEnabled } = metadata ? JSON.parse(metadata) : {};
 
   const messages = useMemo(() => {
-    const timestamps = chatMessages.map((msg) => msg.timestamp);
-    return chatMessages.filter((msg, i) => !timestamps.includes(msg.timestamp, i + 1));
+    const timestamps = chatMessages?.map((msg) => msg.timestamp);
+    return chatMessages?.filter((msg, i) => !timestamps.includes(msg.timestamp, i + 1));
   }, [chatMessages]);
 
   const onSend = async () => {
@@ -60,7 +60,7 @@ export function Chat({ chatMessages, send, localParticipant, metadata }) {
         style={{ flex: 1, overflowY: 'auto', padding: '0 16px' }}
         spacing={2}
       >
-        {messages.map((msg) => (
+        {messages?.map((msg) => (
           <ChatMessage key={msg.timestamp} message={msg} localParticipant={localParticipant} />
         ))}
       </Grid>

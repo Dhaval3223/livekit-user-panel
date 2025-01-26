@@ -20,7 +20,6 @@ import {
 import axiosInstance from 'src/lib/axios';
 
 import { Chat } from 'src/components/chat';
-import { ReactionBar } from 'src/components/reaction-bar';
 import { TokenContext } from 'src/components/token-context';
 import { StreamPlayer } from 'src/components/stream-player';
 
@@ -47,22 +46,32 @@ export default function WatchPage({ roomName, serverUrl }) {
       if (res.status === 200) {
         const {
           auth_token,
-          connection_details: { token },
+          // connection_details: { token },
         } = res.data; // Use res.data instead of await res.json()
 
-        setAuthToken(auth_token);
-        setRoomToken(token);
+        setAuthToken(
+          'eyJhbGciOiJIUzI1NiJ9.eyJyb29tX25hbWUiOiJJbmQlMjB2cyUyMHdkIiwiaWRlbnRpdHkiOiJ0ZXN0In0.S4tw4Rx7I_zzUe3c9fe9Y2q6UPDFR8EYV5mBxkDI5fI'
+        );
+        setRoomToken(
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ2aWRlbyI6eyJyb29tIjoiSW5kJTIwdnMlMjB3ZCIsInJvb21Kb2luIjp0cnVlLCJjYW5QdWJsaXNoIjpmYWxzZSwiY2FuU3Vic2NyaWJlIjp0cnVlLCJjYW5QdWJsaXNoRGF0YSI6dHJ1ZX0sImlhdCI6MTczNzg4MjU5MywibmJmIjoxNzM3ODgyNTkzLCJleHAiOjE3Mzc5MDQxOTMsImlzcyI6IkFQSVVrNGdEa3RDa25zeiIsInN1YiI6InRlc3QiLCJqdGkiOiJ0ZXN0In0.7oOix-NqntQ9JJyJlCkog0fQKoYS-IrTOqldPBkrD2U'
+        );
       } else {
         console.error('Error joining room:', res.statusText);
         // Handle non-200 responses appropriately
       }
     } catch (error) {
+      alert(error?.message);
       console.error('Error during join-room request:', error);
       // Optionally, set an error state or show a message to the user
     } finally {
       setLoading(false); // Stop loading regardless of success or failure
     }
   };
+
+  // useEffect(() => {
+  //   onJoin();
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
 
   if (!authToken || !roomToken) {
     return (
@@ -118,7 +127,7 @@ export default function WatchPage({ roomName, serverUrl }) {
             >
               <StreamPlayer />
             </Box>
-            <ReactionBar />
+            {/* <ReactionBar /> */}
           </Stack>
           <Box
             sx={{
